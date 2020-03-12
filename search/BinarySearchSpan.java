@@ -2,7 +2,10 @@ package search;
 
 public class BinarySearchSpan {
 
-    // pred = args.length >= 1 && i >= 0 && ((i < args.length) --> (Integer.parseInt(args[i]) doesn't throw Exception)) && numbers in args are sorted in non ascending order
+    // pred = args.length >= 1 && ((i >= 0 && i < args.length) --> (Integer.parseInt(args[i]) doesn't throw Exception)) && numbers in args are sorted in non ascending order
+    // post console output: "<lowerBound for target value> <number of elements equal to target>" 
+    // post out <- (lb + " " + (ub - lb)) &&  (lb == arr.length || arr[lb] <= target) && (lb == 0 || a[lb - 1] > target)
+    //                                   && (ub == arr.length) || ((arr[ub] > target) && (arr[ub - 1] <= target))
     public static void main(String[] args) {
         // pred
         int[] array = new int[args.length - 1];
