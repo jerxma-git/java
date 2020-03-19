@@ -1,8 +1,10 @@
 package queue;
 
 import java.util.Arrays;
-// def : a[1] .. a[size] - elements of the queue; R - returned val
-// inv : size >= 0 && for i in [1..size], a[i] != null 
+
+// def a[1]..a[size] - elements of the given queue (a[i] = queue.data[i]); R - returned value
+// inv : queue.size >= 0 && for i in [1..size] a[i] != null
+
 public class ArrayQueueADT {
     protected static final int DEFAULT_CAPACITY = 1;
     protected int size;
@@ -11,75 +13,76 @@ public class ArrayQueueADT {
 
     public ArrayQueueADT(int capacity) {
         assert capacity > 0;
-        data = new Object[capacity];
-        size = start = 0;
+        data = new Object[data.length];
+        start = size = 0;
     }
 
     public ArrayQueueADT() {
         this(DEFAULT_CAPACITY);
     }
 
-    // pre : queue != null
-    // post : queue.size = queue.size' + 1 && queue.data[(queue.start + queue.size) % queue.data.length] == object
+    // pre : object != null && inv && queue != null
+    // post : a' = {a[1]..a[size], object}
     public static void enqueue(ArrayQueueADT queue, Object object) {
         ensureCapacity(queue);
-        queue.data[(queue.start + queue.size) % queue.data.length] = object;
+        assert queue.size < queue.data.length;
+        queue.data[end(queue)] = object;
         queue.size++;
     }
 
-    // pre : queue.size > 0 && queue.data != null && queue != null
-    // post : size = size' - 1 && data[start'] == null && start == (start + 1) % data.length && data != null
-    // R : data[start']
+    // pre : size > 0 && inv && queue != null
+    // post : a' = {a[2]..a[size]} && R = a[1]
     public static Object dequeue(ArrayQueueADT queue) {
+        assert queue.size > 0;
+        queue.size--;
         Object ret = queue.data[queue.start];
         queue.data[queue.start] = null; 
         queue.start = (queue.start + 1) % queue.data.length;
-        queue.size--;
         return ret;
     }
 
-    // pre : queue != null && queue.size > 0 && queue.data != null
-    // post : queue != null && queue.size > 0 && queue.data != null
-    // R : queue.data[start]
+    // pre : inv && queue != null
+    // post : R = a[1]
     public static Object element(ArrayQueueADT queue) {
+        assert queue.size > 0;
         return queue.data[queue.start];
     }
 
-    // pre : queue != null
-    // post : queue != null
-    // R : queue.size == 0
+    // pre : inv && queue != null
+    // post : R = size == 0
     public static boolean isEmpty(ArrayQueueADT queue) {
         return queue.size == 0;
     }
 
-    // pre : queue != null
-    // post : queue.start == queue.size == 0 && queue != null
+    // pre : inv && queue != null
+    // post : a' = {} && size = 0
     public static void clear(ArrayQueueADT queue) {
         queue.start = queue.size = 0;
     }
 
-    // pre : queue != null
-    // post : queue != null
-    // R : R = queue.size
+    // pre : inv && queue != null
+    // post : R = size
     public static int size(ArrayQueueADT queue) {
         return queue.size;
     }
 
-    // pre : queue != null && queue.data != null && queue.data.length > 0
-    // post : queue != null && queue.data.length = queue.data.length' * 2 && for i in [0..size - 1] queue.data[i] = queue.data'[(start + i) % queue.data'.length] && queue.start == 0
-    public static void ensureCapacity(ArrayQueueADT queue) {
+    private static void ensureCapacity(ArrayQueueADT queue) {
         if (queue.size >= queue.data.length - 1) {
-            Object[] newData = new Object[2 * queue.data.length];
-            for (int i = 0; i < queue.size; i++) {
-                newData[i] = queue.data[(queue.start + i) % queue.data.length];
-            }
+            int newCapacity = queue.data.length * 2;
+            Object[] newData = new Object[newCapacity];
+            System.arraycopy(queue.data, queue.start, newData, 0, queue.data.length - queue.start);
+            System.arraycopy(queue.data, 0, newData, queue.data.length - queue.start, end(queue) + 1);
             queue.data = newData;
             queue.start = 0;
         }
     }
 
-    // pre : queue != null
-    // post : R = "[<a[1]>, <a[2]>, ... <a[size]>]" && size != 0 || R == "[]" && size == 0
+    private static int end(ArrayQueueADT queue) {
+        return (queue.start + queue. size) % queue.data.length;
+    }
+
+    // pre : inv && queue != null
+    // post : inv && (R = "[a[1], a[2], ... a[size]]" || R == "[]" && size == 0)
     public static String toStr(ArrayQueueADT queue) {
         if (queue.size == 0) {
             return "[]";

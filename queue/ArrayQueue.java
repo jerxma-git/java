@@ -1,13 +1,14 @@
 package queue;
 
 
-// def : a[1] .. a[size] - elements of the queue; R - returned val
-// inv : size >= 0 && for i in [1..size], a[i] != null 
-public class ArrayQueue extends AbstractQueue {
+// def a[1]..a[size] - elements of the queue; R - returned value
+// inv : size >= 0 && for i in [1..size] a[i] != null
+
+public class ArrayQueue {
     protected static final int DEFAULT_CAPACITY = 1;
+    protected int size;
     protected int start;
     protected Object[] data;
-
 
     public ArrayQueue(int capacity) {
         assert capacity > 0;
@@ -15,56 +16,70 @@ public class ArrayQueue extends AbstractQueue {
         size = start = 0;
     }
 
-
     public ArrayQueue() {
         this(DEFAULT_CAPACITY);
     }
 
-    // pre  : inv && object != null
-    // post : inv && a' = {a[1]..a[size], object}
-    protected void enqueueImpl(Object object) {
+    // pre : object != null && inv
+    // post : a' = {a[1]..a[size], object}
+    public void enqueue(Object object) {
         ensureCapacity();
-        data[(start + size) % data.length] = object;
+        assert size < data.length - 1;
+        data[end()] = object;
+        size++;
     }
 
-    //? a[1] = null ????????????????
-    // pre  : inv && size > 0
-    // post : R = a[1] && a[1] = null && a' = {a[2]..a[size]}
-    protected Object dequeueImpl() {
+    // pre : size > 0 && inv
+    // post : a' = {a[2]..a[size]} && R = a[1]
+    public Object dequeue() {
+        assert size > 0;
+        size--;
         Object ret = data[start];
-        data[start] = null;
+        data[start] = null; 
         start = (start + 1) % data.length;
         return ret;
     }
 
-    // pre  : inv
-    // post : R = a[1] && inv
-    protected Object elementImpl() {
+    // pre : inv
+    // post : R = a[1]
+    public Object element() {
+        assert size > 0;
         return data[start];
     }
 
-    //? quaquova huya
-    // pre  : inv
-    // post : inv && a = {}
-    protected void clearImpl() {
-        start = 0;
+    // pre : inv
+    // post : R = size == 0
+    public boolean isEmpty() {
+        return size == 0;
     }
 
-    //? needed?
-    // pre : data != null && data.length > 0
-    // post : data.length = data.length' * 2 && for i in [0..size - 1] data[i] = data'[(start + i) % data'.length] && start == 0
+    // pre : inv
+    // post : a' = {} && size = 0
+    public void clear() {
+        data = new Object[DEFAULT_CAPACITY];
+        start = size = 0;
+    }
+
+    // pre : inv 
+    // post : R = size
+    public int size() {
+        return size;
+    }
+
+
     private void ensureCapacity() {
         if (size >= data.length - 1) {
-            Object[] newData = new Object[2 * data.length];
-            for (int i = 0; i < size; i++) {
-                newData[i] = data[(start + i) % data.length];
-            }
+            int newCapacity = data.length * 2;
+            Object[] newData = new Object[newCapacity];
+            System.arraycopy(data, start, newData, 0, data.length - start);
+            System.arraycopy(data, 0, newData, data.length - start, end() + 1);
             data = newData;
-            start = 0;        }
+            start = 0;
+        }
     }
 
-    // pre  : inv
-    // post : inv && R = "[a_1, a_2, ... a_n]", where a_i == data[(start + i) % data.length] && n == size) || R == "[]" && size == 0
+    // pre : inv
+    // post : inv && (R = "[a[1], a[2], ... a[size]]" || R == "[]" && size == 0)
     public String toStr() {
         if (size == 0) {
             return "[]";
@@ -80,13 +95,10 @@ public class ArrayQueue extends AbstractQueue {
         return sb.toString();
     }
 
-    // pre  : inv
-    // post : inv && arr[i] = a[i - 1] && R = arr 
-    public Object[] toArray() {
-        Object[] arr = new Object[size];
-        for (int i = 0; i < size; i++) {
-            arr[i] = data[(start + i) % data.length];
-        }
-        return arr;
+    private int end() {
+        return (start + size) % data.length;
     }
+
+
+
 }
