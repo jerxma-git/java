@@ -1,6 +1,6 @@
 package expression.generic;
 
-public abstract class AbstractUnOperation<T extends Evaluative> implements CommonExpression<T> {
+public abstract class AbstractUnOperation<T extends Evaluative<T>> implements CommonExpression<T> {
     protected CommonExpression<T> CommonExpression;
     protected int hash;
     public AbstractUnOperation(CommonExpression<T> CommonExpression) {

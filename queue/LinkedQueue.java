@@ -1,57 +1,81 @@
 package queue;
 
+// def : a[1]..a[size] - elements of the queue; R - returned value
 public class LinkedQueue extends AbstractQueue {
-    private Node head;
-	private Node tail;
-	static int ms = 100;
-    
-	protected void enqueueImplementation(Object element) {
-        tail = new Node(element, tail);
-		if (head == null) {
-			head = tail;
-		}
+    private Node head = null;
+
+    protected void enqueueImpl(Object element) {
+        if (size == 0) {
+            head = new Node(element);
+        } else {
+            getTail().next = new Node(element);
+        }
     }
 
-    protected void dequeueImplementation() {
-		if (head.last != null) {
-			head.last.next = null;
-		}
-        head = head.last;
-		if (head == null) {
-			tail = null;
-		}
+    private Node getTail() {
+        if (size == 0) {
+            return null;
+        }
+        Node tail = head;
+        for (int i = 0; i < size - 1; i++) {
+            tail = tail.next;
+        }
+        return tail;
     }
 
-    protected Object elementImplementation() {
+    protected Object dequeueImpl() {
+        Object returnedVal = head.value;
+        head = head.next;
+        return returnedVal;
+    }
+
+    @Override
+    protected void clearImpl() {
+        head = null;
+        System.out.println("cleared");
+    }
+
+    public Object elementImpl() {
         return head.value;
     }
- 
-    protected void clearImplementation() {
-		head = null;
-		tail = null;
-	}	
-	
-	protected Object[] toArr(Object[] array) {
-		Node nod = head;
+
+    public Object[] toArray() {
+        Object[] arr = new Object[size];
+        Node curr = head;
         for (int i = 0; i < size; i++) {
-            array[i] = nod.value;
-			nod = nod.last;
+            arr[i] = curr.value;
+            curr = curr.next;
         }
-        return array;
+        return arr;
+    }
+
+    public String toStr() {
+        if (size == 0) {
+            return "[]";
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        Node curr = head;
+        for (int i = 0; i < size - 1; i++) {
+            sb.append(curr.value)
+                .append(", ");
+            curr = curr.next;
+        }
+        sb.append(curr.value);
+        sb.append(']');
+        return sb.toString();
     }
 
     private class Node {
         private Object value;
         private Node next;
-		private Node last;
-        public Node(Object value, Node next) {
+
+        public Node(Object value) {
             assert value != null;
             this.value = value;
-			if (next != null) {
-				next.last = this;
-			}
-            this.next = next;
-			this.last = null;
         }
     }
+
+
+    
 }

@@ -1,5 +1,5 @@
 package expression.generic;
-public class Divide<T extends Evaluative> extends AbstractBinOperation<T> {
+public class Divide<T extends Evaluative<T>> extends AbstractBinOperation<T> {
     public Divide(CommonExpression<T> first, CommonExpression<T> second) {
         super(first, second);
     }
@@ -21,7 +21,7 @@ public class Divide<T extends Evaluative> extends AbstractBinOperation<T> {
 
     @Override
     protected T calculate(T first, T second) {
-        return (T) first.div(second);
+        return first.div(second);
     }
 
     // @Override

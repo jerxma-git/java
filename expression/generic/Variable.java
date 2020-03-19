@@ -1,5 +1,5 @@
 package expression.generic;
-public class Variable<T extends Evaluative> implements CommonExpression<T> {
+public class Variable<T extends Evaluative<T>> implements CommonExpression<T> {
     String varName;
     public Variable(String varName) {
         this.varName = varName;

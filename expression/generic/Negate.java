@@ -2,7 +2,7 @@ package expression.generic;
 
 import expression.exceptions.CheckedNegate;
 
-public class Negate<T extends Evaluative> extends AbstractUnOperation<T> {
+public class Negate<T extends Evaluative<T>> extends AbstractUnOperation<T> {
 
     public Negate(CommonExpression<T> CommonExpression) {
         super(CommonExpression);

@@ -1,5 +1,5 @@
 package expression.generic;
-public abstract class AbstractBinOperation<T extends Evaluative> implements CommonExpression<T> {
+public abstract class AbstractBinOperation<T extends Evaluative<T>> implements CommonExpression<T> {
     protected CommonExpression<T> first;
     protected CommonExpression<T> second;
     protected int hash;

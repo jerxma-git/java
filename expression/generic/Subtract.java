@@ -1,5 +1,5 @@
 package expression.generic;
-public class Subtract<T extends Evaluative> extends AbstractBinOperation<T> {
+public class Subtract<T extends Evaluative<T>> extends AbstractBinOperation<T> {
     public Subtract(CommonExpression<T> first, CommonExpression<T> second) {
         super(first, second);
     }

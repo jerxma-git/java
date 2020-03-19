@@ -1,15 +1,28 @@
 import search.*;
 
+import java.util.Scanner;
+
+import queue.*;
 public class Test {
     public static void main(String[] args) {
-        int[] a = new int[]{5, 4, 3, 2, 1};
-        System.out.println(BinarySearchSpan.iterativeSearchUpperBound(a, 6));
-        System.out.println(BinarySearchSpan.iterativeSearchUpperBound(a, 5));
-        System.out.println(BinarySearchSpan.iterativeSearchUpperBound(a, 4));
-        System.out.println(BinarySearchSpan.iterativeSearchUpperBound(a, 3));
-        System.out.println(BinarySearchSpan.iterativeSearchUpperBound(a, 2));
-        System.out.println(BinarySearchSpan.iterativeSearchUpperBound(a, 1));
-        System.out.println(BinarySearchSpan.iterativeSearchUpperBound(a, 0));
-
+        Queue q = new LinkedQueue();
+        Scanner scan = new Scanner(System.in);
+        String command;
+        while(!(command = scan.next()).isEmpty()) {
+            switch (command) {
+            case "e":
+                String next = scan.next();
+                q.enqueue(next);
+                break;
+            case "d":
+                q.dequeue();
+                break;
+            case "c":
+                q.clear();
+                break;
+            }
+            System.out.println(q.toStr());
+        }
+        scan.close();
     }
 }

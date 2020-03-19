@@ -1,5 +1,5 @@
 package expression.generic;
-public class Const<T extends Evaluative> implements CommonExpression<T> {
+public class Const<T extends Evaluative<T>> implements CommonExpression<T> {
 
     private T val;
 

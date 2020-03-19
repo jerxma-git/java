@@ -1,5 +1,5 @@
 package expression.generic;
-public class Multiply<T extends Evaluative> extends AbstractBinOperation<T> {
+public class Multiply<T extends Evaluative<T>> extends AbstractBinOperation<T> {
     public Multiply(CommonExpression<T> first, CommonExpression<T> second) {
         super(first, second);
     }
